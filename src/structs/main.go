@@ -10,17 +10,31 @@ type contactInfo struct {
 type person struct {
 	firstName string
 	lastName  string
+	contactInfo
 }
 
 func main() {
+
 	person1 := person{
 		firstName: "alex",
 		lastName:  "bob",
+		contactInfo: contactInfo{
+			email:   "jim@gmail.com",
+			zipCode: 23456,
+		},
 	}
-	fmt.Println(person1)
-	fmt.Println(person1.firstName)
-	fmt.Println(person1.lastName)
-	person1.firstName = "tony"
-	fmt.Println(person1.firstName)
-	fmt.Printf("%+v\n", person1)
+
+	person1.updateName("matt")
+	person1.print()
+}
+
+func (p person) print() {
+	fmt.Printf("%+v\n", p)
+	fmt.Printf("%v\n", p.contactInfo.email)
+	fmt.Printf("%v\n", p.firstName)
+}
+
+func (p *person) updateName(newFirstName string) {
+	(*p).firstName = newFirstName
+
 }
