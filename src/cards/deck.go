@@ -1,30 +1,39 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"os"
-	"strings"
 	"time"
 )
 
 //Create a new type of deck
 //Which is a slice of strings
-type deck []string
+type card struct {
+	Value string `json:"value"`
+	Suit  string `json:"suit"`
+}
+
+type deck []card
 
 func newDeck() deck {
-	cards := deck{}
+	cardsSlice := deck{}
 
 	cardsSuits := []string{"Spades", "Diamonds", "Hearts", "Clubs"}
 	cardValues := []string{"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"}
 
 	for _, suit := range cardsSuits {
 		for _, values := range cardValues {
-			cards = append(cards, values+" of "+suit)
+			oneCard := card{
+				Suit:  suit,
+				Value: values,
+			}
+			cardsSlice = append(cardsSlice, oneCard)
 		}
 	}
-	return cards
+	return cardsSlice
 }
 
 func dealCards(d deck, handSize int) (deck, deck) {
@@ -38,21 +47,31 @@ func (d deck) print() {
 }
 
 func (d deck) toString() string {
-	return strings.Join([]string(d), ",")
-}
-
-func (d deck) saveToFile(fileName string) error {
-	return ioutil.WriteFile(fileName, []byte(d.toString()), 0666)
-}
-
-func newDeckFromFile(fileName string) deck {
-	bs, err := ioutil.ReadFile(fileName)
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+	var deckString string
+	for i, card := range d {
+		if i == len(d)-1 {
+			deckString += card.Value + " " + card.Suit
+		} else {
+			deckString += card.Value + " " + card.Suit + ", "
+		}
 	}
-	return deck(strings.Split(string(bs), ","))
+	return deckString
+}
+
+func (d deck) saveToJSON(fileName string) error {
+	data, err := json.Marshal(d)
+	errorHandler(err)
+	return ioutil.WriteFile(fileName, data, 0666)
+}
+
+func newDeckFromJSON(fileName string) deck {
+	jsonFile, err := os.Open(fileName)
+	errorHandler(err)
+	bv, e := ioutil.ReadAll(jsonFile)
+	errorHandler(e)
+	var deckFromFile deck
+	json.Unmarshal(bv, deckFromFile)
+	return deckFromFile
 }
 
 func (d deck) shuffle() {
