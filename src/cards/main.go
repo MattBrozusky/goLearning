@@ -7,17 +7,11 @@ import (
 
 func main() {
 	gameDeck := newDeck()
+	gameDeck.shuffle()
 
-	deckOne, gameDeck := dealCards(gameDeck, 10)
+	players := submitPlayers()
 
-	deckOne.shuffle()
-	deckOne.print()
-	deckOne.saveToJSON("deckOne")
-
-	deckFromFile := newDeckFromJSON("deckOne")
-
-	deckFromFile.print()
-
+	newBlackJackGame(players, gameDeck)
 }
 
 func errorHandler(e error) {

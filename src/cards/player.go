@@ -1,12 +1,24 @@
 package main
 
-// type player struct {
-// 	name: string
-// 	cards: deck
-// 	score: int
-// 	moves: int
-// }
+type player struct {
+	name  string
+	hand  deck
+	score int
+}
 
-func newPlayer(name string) {
+type allPlayers []player
 
+func newPlayer(name string) player {
+	p := player{}
+	p.name = name
+	return p
+}
+
+func (p *player) updateScore() int {
+	newScore := 0
+	for _, card := range p.hand {
+		newScore += checkScore(card)
+	}
+	p.score = newScore
+	return newScore
 }

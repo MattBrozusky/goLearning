@@ -36,26 +36,25 @@ func newDeck() deck {
 	return cardsSlice
 }
 
-func dealCards(d deck, handSize int) (deck, deck) {
-	return d[:handSize], d[handSize:]
+func dealCards(d deck, handSize int, p *player) deck {
+	gameDeck := d[handSize:]
+	cardsForPlayer := d[:handSize]
+
+	if len(p.hand) == 0 {
+		p.hand = cardsForPlayer
+		return gameDeck
+	}
+
+	for _, card := range cardsForPlayer {
+		p.hand = append(p.hand, card)
+	}
+	return gameDeck
 }
 
 func (d deck) print() {
 	for i, card := range d {
 		fmt.Println(i, card)
 	}
-}
-
-func (d deck) toString() string {
-	var deckString string
-	for i, card := range d {
-		if i == len(d)-1 {
-			deckString += card.Value + " " + card.Suit
-		} else {
-			deckString += card.Value + " " + card.Suit + ", "
-		}
-	}
-	return deckString
 }
 
 func (d deck) saveToJSON(fileName string) error {
@@ -83,3 +82,15 @@ func (d deck) shuffle() {
 		d[i], d[newPosition] = d[newPosition], d[i]
 	}
 }
+
+// func (d deck) toString() string {
+// 	var deckString string
+// 	for i, card := range d {
+// 		if i == len(d)-1 {
+// 			deckString += card.Value + " " + card.Suit
+// 		} else {
+// 			deckString += card.Value + " " + card.Suit + ", "
+// 		}
+// 	}
+// 	return deckString
+// }
