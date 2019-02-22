@@ -20,10 +20,9 @@ func newBlackJackGame(players allPlayers, gameDeck deck) {
 				fmt.Printf("%v ", players[i].hand[j])
 			}
 			fmt.Printf("\nAnd here is your score: %v\n", players[i].updateScore())
+			//TODO end game if 21 is reached by i player and declare them as a winner
 		}
-		if turn == 3 {
-			break
-		}
+
 	}
 }
 
@@ -31,7 +30,6 @@ func submitPlayers() allPlayers {
 	return allPlayers{
 		newPlayer("Matt"),
 		newPlayer("Dealer"),
-		newPlayer("Tester"),
 	}
 }
 

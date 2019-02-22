@@ -9,8 +9,10 @@ type player struct {
 type allPlayers []player
 
 func newPlayer(name string) player {
-	p := player{}
-	p.name = name
+	p := player{
+		name: name,
+		score: 0,
+	}
 	return p
 }
 

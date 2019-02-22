@@ -40,14 +40,7 @@ func dealCards(d deck, handSize int, p *player) deck {
 	gameDeck := d[handSize:]
 	cardsForPlayer := d[:handSize]
 
-	if len(p.hand) == 0 {
-		p.hand = cardsForPlayer
-		return gameDeck
-	}
-
-	for _, card := range cardsForPlayer {
-		p.hand = append(p.hand, card)
-	}
+	p.hand = append(p.hand, cardsForPlayer...)
 	return gameDeck
 }
 
@@ -69,7 +62,7 @@ func newDeckFromJSON(fileName string) deck {
 	bv, e := ioutil.ReadAll(jsonFile)
 	errorHandler(e)
 	var deckFromFile deck
-	json.Unmarshal(bv, deckFromFile)
+	errorHandler(json.Unmarshal(bv, deckFromFile))
 	return deckFromFile
 }
 
